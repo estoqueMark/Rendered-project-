@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Grande Resort & Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <nav>
+            <div class="nav_bar">
+                <div class="logo">
+                    <a href="#"><img src="logo.png" alt="Logo"></a>
+                </div>
+                <div class="nav_menu_button" id="menu-btn">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+            
+            <ul class="nav_link" id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#service">Amenities</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#explore">Visit us</a></li>
+                <li><a href="#contact">Contacts</a></li>
+            </ul>
+            <button class="btn nav_btn"><a href="#" id="logoutLink" title="Logout"><span class="material-icons">logout</span></a></button>
+        </nav>
+        <div class="sidebar-welcome">
+            <h2>Hello, <span id="userEmail">[User's Email]</span>!</h2>
+        </div>
+        <div class="section_container header_container" id="home">
+            <p>Relaxation is Everything</p>
+            <h1>Make yourself at Home <br>in our <span>Resort</span></h1>
+        </div>
+
+    </header>
+
+    <main>
+        <h1>Welcome to the Dashboard!</h1>
+        <p>Hello, <span id="dashboardEmail">[Loading...]</span>!</p>
+    </main>
+
+    <script>
+        // Fetch user details when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchUserDetails();
+        });
+
+        async function fetchUserDetails() {
+            try {
+                const response = await fetch('/user-details', { credentials: 'include' });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user details.');
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update the elements with user email for both sections
+                    document.getElementById('userEmail').textContent = data.user.email;
+                    document.getElementById('dashboardEmail').textContent = data.user.email;
+                } else {
+                    console.error('Failed to fetch user details:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            }
+        }
+
+// Add logout functionality
+document.getElementById('logoutLink').addEventListener('click', function (event) {
+event.preventDefault();
+performLogout();
+});
+async function performLogout() {
+try {
+const response = await fetch('/logout', {
+method: 'POST',
+credentials: 'include'
+});
+if (response.ok) {
+// Redirect to login page
+window.location.href = 'login.html';
+} else {
+console.error('Logout failed');
+}
+} catch (error) {
+console.error('Error during logout:', error);
+}
+}
+
+    </script>
+</body>
+</html>
